@@ -1,0 +1,96 @@
+DET-003 — SUCCESSFUL AUTHENTICATION AFTER MULTIPLE FAILURES
+
+Project: Splunk SOC Detection Engineering & Threat Hunting Lab
+Platform: Splunk Enterprise
+Detection Type: Authentication Correlation Detection
+Status: Enabled
+
+1. DETECTION OBJECTIVE
+
+This detection identifies a successful Windows authentication
+following multiple failed authentication attempts by the same user.
+
+2. SPL DETECTION QUERY
+
+index=windows_security (EventCode=4625 OR EventCode=4624)
+| sort 0 _time
+| streamstats count(eval(EventCode=4625)) as failed_before by User
+| where EventCode=4624 AND failed_before >= 3
+
+3. DETECTION LOGIC
+
+The search examines both failed authentication events
+(EventCode 4625) and successful authentication events
+(EventCode 4624).
+
+The events are sorted chronologically by time.
+
+The search counts previous failed authentication events for each
+user and identifies a successful authentication when at least three
+failed authentication events have occurred previously for that user.
+
+4. LABORATORY INVESTIGATION RESULT
+
+The John account demonstrated the following authentication sequence:
+
+4625 → 4625 → 4625 → 4624
+
+The events occurred as follows:
+
+09:05:44 — Failed
+09:06:10 — Failed
+09:07:02 — Failed
+09:08:30 — Successful
+
+The successful authentication occurred approximately 1 minute and
+28 seconds after the third failed authentication attempt.
+
+5. SOURCE IP
+
+The observed authentication activity originated from:
+
+192.168.1.75
+
+The source IP was associated with all four authentication events
+identified during the investigation.
+
+6. DETECTION SIGNIFICANCE
+
+A successful authentication following multiple failed attempts
+provides a useful correlation point for SOC investigation.
+
+The pattern may represent legitimate authentication activity,
+password-entry errors, account misuse, or possible credential-access
+activity.
+
+The available laboratory evidence does not establish malicious
+activity or account compromise.
+
+7. MITRE ATT&CK RELEVANCE
+
+Potentially relevant technique:
+
+T1110 — Brute Force
+
+The detection provides a correlation point that can support
+investigation of possible brute-force activity.
+
+The detection does not independently confirm that a brute-force
+attack occurred.
+
+8. ALERT CONFIGURATION
+
+Detection: DET-003 — Successful Authentication After Multiple
+Failures
+
+The detection was created and enabled in Splunk Enterprise as part
+of the SOC Detection Engineering workflow.
+
+9. PROJECT ROLE
+
+DET-003 represents the correlation stage of the detection-engineering
+workflow.
+
+It connects repeated authentication failures with a subsequent
+successful authentication and provides an investigation trigger for
+the SOC analyst.

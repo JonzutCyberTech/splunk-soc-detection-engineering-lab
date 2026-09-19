@@ -1,0 +1,65 @@
+DET-002 — MULTIPLE FAILED AUTHENTICATION ATTEMPTS
+
+Project: Splunk SOC Detection Engineering & Threat Hunting Lab
+Platform: Splunk Enterprise
+Detection Type: Repeated Authentication Failure Detection
+Status: Enabled
+
+1. DETECTION OBJECTIVE
+
+This detection identifies users with three or more failed Windows
+authentication attempts.
+
+2. SPL DETECTION QUERY
+
+index=windows_security EventCode=4625
+| stats count as failed_attempts by User
+| where failed_attempts >= 3
+
+3. DETECTION LOGIC
+
+The search identifies EventCode 4625 failed authentication events,
+groups them by user, counts the failed attempts, and returns users
+with three or more failed attempts.
+
+4. LABORATORY RESULT
+
+The available Windows Security telemetry identified the John
+account with three failed authentication attempts.
+
+User: John
+
+Failed authentication attempts: 3
+
+5. DETECTION SIGNIFICANCE
+
+Multiple failed authentication attempts may indicate password
+errors, account misuse, automated authentication activity, or
+possible credential-access activity.
+
+The detection therefore provides a basis for further SOC
+investigation.
+
+6. MITRE ATT&CK RELEVANCE
+
+Potentially relevant technique:
+
+T1110 — Brute Force
+
+The detection can support investigation of repeated authentication
+failures associated with possible brute-force activity.
+
+The detection does not independently establish malicious activity.
+
+7. ALERT CONFIGURATION
+
+Detection: DET-002 — Multiple Failed Authentication Attempts
+
+The detection was created and enabled in Splunk Enterprise as part
+of the SOC Detection Engineering workflow.
+
+8. PROJECT ROLE
+
+DET-002 extends DET-001 by identifying users experiencing repeated
+failed authentication attempts and providing a stronger trigger
+for authentication investigation.

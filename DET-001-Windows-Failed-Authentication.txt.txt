@@ -1,0 +1,76 @@
+DET-001 — WINDOWS FAILED AUTHENTICATION
+
+Project: Splunk SOC Detection Engineering & Threat Hunting Lab
+Platform: Splunk Enterprise
+Detection Type: Windows Authentication Detection
+Status: Enabled
+
+1. DETECTION OBJECTIVE
+
+This detection identifies failed Windows authentication attempts
+and summarizes the activity by user account and source IP address.
+
+2. SPL DETECTION QUERY
+
+index=windows_security EventCode=4625 Status=Failed
+| stats count by User Source_IP
+| sort - count
+
+3. DETECTION LOGIC
+
+EventCode 4625 represents a failed Windows authentication event.
+
+The search groups failed authentication events by:
+
+• User
+• Source_IP
+
+The resulting count provides visibility into failed authentication
+activity associated with each user and source IP combination.
+
+4. LABORATORY RESULTS
+
+The detection identified six failed authentication events in the
+available Windows Security dataset.
+
+Observed results included:
+
+John — 192.168.1.75 — 3 failed attempts
+Administrator — 10.0.0.25 — 2 failed attempts
+Administrator — 192.168.1.50 — 1 failed attempt
+
+5. DETECTION SIGNIFICANCE
+
+This detection provides a foundational authentication-monitoring
+capability for identifying failed Windows logon activity.
+
+Repeated failed authentication attempts can be investigated for
+possible credential-access activity, while recognizing that failed
+authentication events alone do not establish malicious activity.
+
+6. MITRE ATT&CK RELEVANCE
+
+Potentially relevant technique:
+
+T1110 — Brute Force
+
+The detection provides authentication telemetry that can support
+investigation of possible brute-force activity.
+
+The detection itself does not establish that a brute-force attack
+has occurred.
+
+7. ALERT CONFIGURATION
+
+Detection: DET-001 — Windows Failed Authentication
+
+The detection was created and enabled in Splunk Enterprise as part
+of the SOC Detection Engineering workflow.
+
+8. PROJECT ROLE
+
+DET-001 provides the initial failed-authentication detection layer
+of the project.
+
+It feeds into subsequent detection, investigation, MITRE ATT&CK
+mapping, and SOC monitoring activities.

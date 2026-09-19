@@ -1,0 +1,72 @@
+STEP 10 — SOC AUTHENTICATION MONITORING DASHBOARD
+
+Project: Splunk SOC Detection Engineering & Threat Hunting Lab
+Platform: Splunk Enterprise 10.4.3
+Dashboard: SOC Authentication Monitoring Dashboard
+Dashboard Type: Splunk Dashboard Studio
+Status: Completed
+Date: 19 September 2026
+
+1. OBJECTIVE
+
+The SOC Authentication Monitoring Dashboard provides a centralized view of Windows authentication activity within the Splunk SOC laboratory environment.
+
+The dashboard is designed to support monitoring and investigation of authentication events, including successful and failed authentication activity.
+
+2. DASHBOARD COMPONENTS
+
+Dashboard Name:
+SOC Authentication Monitoring Dashboard
+
+Tab:
+Authentication Overview
+
+Global Time Range:
+All time
+
+Panel:
+Total Authentication Events
+
+Visualization:
+Statistics Table
+
+3. DATA SOURCE
+
+Splunk Index:
+windows_security
+
+The dashboard uses Windows Security event telemetry ingested into the windows_security index.
+
+4. VERIFIED RESULT
+
+Total Authentication Events:
+9
+
+The dashboard successfully displayed 9 authentication events from the Windows Security dataset.
+
+5. SECURITY MONITORING PURPOSE
+
+The dashboard provides a visual monitoring layer for authentication activity and supports SOC analyst activities such as:
+
+- Authentication event monitoring
+- Failed and successful logon analysis
+- User activity investigation
+- Detection engineering validation
+- Incident investigation
+- Security telemetry visualization
+
+6. PROJECT EVIDENCE
+
+The dashboard was created and saved successfully in Splunk Dashboard Studio.
+
+Dashboard URL:
+Local Splunk environment
+
+Evidence:
+SOC Authentication Monitoring Dashboard displaying the Total Authentication Events panel with a verified count of 9 events.
+
+7. COMPLETION STATUS
+
+STEP 10 — SOC AUTHENTICATION MONITORING DASHBOARD: COMPLETED
+
+The dashboard is available in the Splunk Dashboards section and can be used as part of the SOC Detection Engineering & Threat Hunting Lab portfolio.

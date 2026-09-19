@@ -1,0 +1,283 @@
+INC-001 — JOHN AUTHENTICATION INCIDENT INVESTIGATION
+
+Project: Splunk SOC Detection Engineering & Threat Hunting Lab
+Platform: Splunk Enterprise
+Investigation Type: Authentication Activity Investigation
+Analyst: SOC Analyst
+Status: Completed
+Date: 16 September 2026
+
+
+1. INCIDENT OVERVIEW
+
+This investigation examines authentication activity associated with the user account "John". The objective is to establish a chronological authentication timeline, identify failed and successful authentication attempts, determine the source IP addresses involved, and assess whether the observed activity requires further investigation.
+
+
+2. INVESTIGATION OBJECTIVES
+
+The investigation aims to:
+
+• Establish John's authentication timeline.
+• Identify failed authentication attempts.
+• Identify successful authentication attempts.
+• Examine the source IP addresses associated with the activity.
+• Compare authentication actions and statuses.
+• Identify unusual or suspicious authentication patterns.
+• Provide evidence for further SOC investigation and response.
+
+
+3. SPLUNK INVESTIGATION SEARCH
+
+The following SPL query was used to examine John's authentication activity:
+
+index=windows_security User=John | sort 0 _time | table _time EventCode User Source_IP Action Status
+
+
+4. INVESTIGATION DATA
+
+The search results were used to establish John's authentication timeline based on the available Windows Security telemetry in the Splunk laboratory environment.
+
+Key fields examined:
+
+_time
+EventCode
+User
+Source_IP
+Action
+Status
+
+5. AUTHENTICATION TIMELINE
+
+The authentication events were reviewed chronologically to establish the following timeline:
+
+2026-09-13 09:05:44.462 — EventCode 4625 — User John — Source IP 192.168.1.75 — Logon Failed.
+
+2026-09-13 09:06:10.462 — EventCode 4625 — User John — Source IP 192.168.1.75 — Logon Failed.
+
+2026-09-13 09:07:02.462 — EventCode 4625 — User John — Source IP 192.168.1.75 — Logon Failed.
+
+2026-09-13 09:08:30.462 — EventCode 4624 — User John — Source IP 192.168.1.75 — Logon Successful.
+
+Summary:
+Three consecutive failed authentication attempts against the John account were recorded from source IP 192.168.1.75. Approximately 1 minute and 28 seconds after the third failed attempt, a successful authentication was recorded from the same source IP.
+
+
+6. INITIAL FINDINGS
+
+1. The John account experienced three failed authentication attempts.
+
+2. All three failed attempts originated from the same source IP address: 192.168.1.75.
+
+3. A successful authentication occurred shortly after the three failed attempts.
+
+4. The successful authentication also originated from 192.168.1.75.
+
+5. The authentication sequence warrants further investigation to determine whether the successful login was legitimate or related to the preceding failed authentication attempts.
+
+6. Based on the available authentication events alone, the observed pattern warrants further investigation. The available evidence does not establish that the account was compromised.
+
+
+7. INVESTIGATION STATUS
+
+Status: Completed
+
+The authentication investigation has been completed based on
+the available Windows Security telemetry in the Splunk
+laboratory environment.
+
+
+8. SOURCE IP INVESTIGATION
+
+A source IP investigation was conducted using the following
+Splunk search:
+
+index=windows_security Source_IP=192.168.1.75 | sort 0 _time | table _time EventCode User Source_IP Action Status
+
+The search returned four authentication events.
+
+All four events were associated with the user account "John".
+No additional user accounts were identified in the available
+Windows Security telemetry for source IP 192.168.1.75.
+
+The four events consisted of three failed authentication
+attempts (EventCode 4625) followed by one successful
+authentication (EventCode 4624).
+
+The source IP investigation therefore confirms that the
+observed authentication sequence involving John originated
+from 192.168.1.75, with no other user accounts associated with
+that IP in the available dataset.
+
+
+9. MITRE ATT&CK MAPPING
+
+Relevant MITRE ATT&CK Enterprise Technique:
+
+Technique ID: T1110
+Technique Name: Brute Force
+Tactic: Credential Access
+
+The observed authentication pattern is relevant to the
+T1110 Brute Force technique because the investigation
+identified repeated failed authentication attempts followed
+by a successful authentication.
+
+Observed sequence:
+
+4625 → 4625 → 4625 → 4624
+
+The evidence supports using T1110 as a relevant detection and
+investigation mapping.
+
+However, the available laboratory evidence does NOT establish
+that a brute-force attack occurred.
+
+The evidence also does not independently establish:
+
+• That the activity was malicious.
+• That the successful authentication was performed by an
+  attacker.
+• That the John account was compromised.
+• That the credentials were obtained through brute force.
+• That 192.168.1.75 was controlled by an attacker.
+
+The MITRE ATT&CK mapping therefore represents a relevant
+investigation and detection context rather than confirmation
+of malicious activity.
+
+
+10. DETECTION ENGINEERING RELATIONSHIP
+
+The investigation is associated with the detection-engineering
+work completed during the project.
+
+Relevant detections include:
+
+DET-001 — Windows Failed Authentication
+
+DET-002 — Authentication Detection
+
+DET-003 — Authentication Investigation / Detection
+
+The detections provide the monitoring and investigation
+capability used to identify and examine authentication
+activity involving the John account.
+
+The investigation demonstrates how authentication telemetry
+can progress from detection to investigation and MITRE ATT&CK
+mapping.
+
+
+11. SOC DASHBOARD EVIDENCE
+
+A Splunk Dashboard Studio dashboard was created as part of
+the SOC monitoring stage.
+
+Dashboard Name:
+
+SOC Authentication Monitoring Dashboard
+
+Tab:
+
+Authentication Overview
+
+Global Time Range:
+
+All time
+
+The dashboard uses the following Splunk index:
+
+windows_security
+
+The dashboard successfully displayed:
+
+Total Authentication Events: 9
+
+The dashboard provides a visual monitoring layer for Windows
+authentication activity and supports SOC analyst activities
+including authentication monitoring, detection validation,
+and incident investigation.
+
+
+12. INVESTIGATION LIMITATIONS
+
+The investigation is based on a limited Windows Security
+authentication dataset within a controlled Splunk laboratory
+environment.
+
+The available telemetry is sufficient to demonstrate the
+authentication detection and investigation workflow, but it is
+not sufficient to establish attacker intent or confirm account
+compromise.
+
+Additional evidence that could strengthen a real-world
+investigation includes:
+
+• Additional authentication events over a longer period.
+• Endpoint and process telemetry.
+• Network connection telemetry.
+• Account-management events.
+• Privileged-account activity.
+• Endpoint Detection and Response (EDR) telemetry.
+• Authentication source and destination details.
+• Correlation with additional security alerts.
+
+
+13. FINAL INVESTIGATION CONCLUSION
+
+The investigation identified four authentication events
+associated with the John account and source IP
+192.168.1.75.
+
+The observed sequence consisted of:
+
+• 3 failed authentication attempts — EventCode 4625.
+• 1 successful authentication attempt — EventCode 4624.
+
+The successful authentication occurred approximately
+1 minute and 28 seconds after the third failed attempt and
+originated from the same source IP address.
+
+This authentication pattern is relevant to credential-access
+detection and can be mapped to MITRE ATT&CK technique T1110
+(Brute Force) for investigation purposes.
+
+However, the available evidence does not establish that a
+brute-force attack or account compromise occurred.
+
+The investigation therefore documents the observed activity,
+its detection significance, and its limitations without
+concluding that the activity was malicious.
+
+Final Investigation Status:
+
+COMPLETED
+
+
+14. PROJECT EVIDENCE
+
+Associated project artifacts:
+
+• DET-001 — Windows Failed Authentication
+• DET-002 — Authentication Detection
+• DET-003 — Authentication Investigation / Detection
+• INC-001 — John Authentication Incident Investigation
+• STEP-09-MITRE-ATTACK-MAPPING.txt
+• STEP-10-SOC-AUTHENTICATION-MONITORING-DASHBOARD.txt
+• SOC Authentication Monitoring Dashboard
+
+Project workflow demonstrated:
+
+Windows Security Telemetry
+        ↓
+Splunk Index
+        ↓
+Detection Engineering
+        ↓
+Authentication Investigation
+        ↓
+MITRE ATT&CK Mapping
+        ↓
+SOC Dashboard
+        ↓
+Final Incident Documentation

@@ -1,0 +1,256 @@
+STEP 9 — MITRE ATT&CK MAPPING
+
+Project: Splunk SOC Detection Engineering & Threat Hunting Lab
+Platform: Splunk Enterprise
+Investigation: INC-001 — John Authentication Incident Investigation
+Analyst: SOC Analyst
+Date: 19 September 2026
+Status: Completed
+
+============================================================
+1. OBSERVED ACTIVITY
+============================================================
+
+The Splunk investigation identified authentication activity
+associated with the user account "John" and source IP address
+192.168.1.75.
+
+Observed authentication sequence:
+
+- 3 failed authentication attempts
+- Windows Event ID: 4625
+- User: John
+- Source IP: 192.168.1.75
+
+Followed by:
+
+- 1 successful authentication attempt
+- Windows Event ID: 4624
+- User: John
+- Source IP: 192.168.1.75
+
+The observed sequence was investigated as an authentication
+detection and investigation use case.
+
+
+============================================================
+2. RELEVANT MITRE ATT&CK TECHNIQUE
+============================================================
+
+The observed repeated authentication failures are relevant to
+the MITRE ATT&CK Enterprise technique:
+
+Brute Force
+
+
+============================================================
+3. TECHNIQUE ID AND NAME
+============================================================
+
+Technique ID: T1110
+Technique Name: Brute Force
+Tactic: Credential Access
+
+T1110 describes attempts to gain access to an account through
+repeated authentication attempts or related brute-force
+methods.
+
+
+============================================================
+4. WHY THE TECHNIQUE IS RELEVANT
+============================================================
+
+The technique is relevant because the investigation identified
+multiple failed authentication attempts against the same user
+account before a successful authentication event.
+
+The sequence:
+
+4625 → 4625 → 4625 → 4624
+
+represents repeated authentication failures followed by a
+successful authentication.
+
+This pattern is suitable for detection engineering and
+threat-hunting activities associated with possible credential
+access attempts.
+
+However, the presence of this pattern alone is not sufficient
+to establish that a brute-force attack occurred.
+
+
+============================================================
+5. EVIDENCE FROM THE SPLUNK LAB
+============================================================
+
+The investigation identified the following evidence:
+
+User:
+John
+
+Source IP:
+192.168.1.75
+
+Failed Authentication:
+Windows Event ID 4625
+
+Number of Failed Attempts:
+3
+
+Successful Authentication:
+Windows Event ID 4624
+
+Number of Successful Attempts:
+1
+
+Observed Sequence:
+3 failed logons followed by 1 successful logon.
+
+The evidence was obtained from the Windows Security
+authentication data ingested into Splunk Enterprise.
+
+
+============================================================
+6. WHAT THE EVIDENCE DOES NOT PROVE
+============================================================
+
+The available lab evidence does NOT by itself prove that:
+
+- A brute-force attack actually occurred.
+- The authentication failures were malicious.
+- The successful authentication was performed by an attacker.
+- The credentials were compromised.
+- The source IP address was controlled by an attacker.
+- The activity represents an active security incident in a
+  real production environment.
+
+The authentication pattern may have other explanations,
+including legitimate user error, an incorrect password,
+credential synchronization issues, automated processes, or
+other benign causes.
+
+Therefore, T1110 is documented as a relevant MITRE ATT&CK
+mapping for the detection and investigation use case rather
+than as proof of malicious activity.
+
+
+============================================================
+7. RELATIONSHIP TO DET-001, DET-002 AND DET-003
+============================================================
+
+DET-001:
+Windows Failed Authentication
+
+Purpose:
+Detect failed Windows authentication activity.
+
+MITRE ATT&CK relevance:
+Repeated failed authentication events can provide telemetry
+relevant to credential-access investigations, including
+potential Brute Force activity (T1110).
+
+
+DET-002:
+Authentication Detection
+
+Purpose:
+Identify authentication activity that meets the detection
+criteria established during the detection-engineering phase.
+
+MITRE ATT&CK relevance:
+Authentication activity provides evidence that can be
+investigated for potential credential-access behavior.
+
+
+DET-003:
+Authentication Investigation / Detection
+
+Purpose:
+Support identification and investigation of authentication
+patterns involving failed and successful logons.
+
+MITRE ATT&CK relevance:
+The observed repeated authentication failures followed by a
+successful authentication provide a detection scenario that
+can be mapped to T1110 for investigation purposes.
+
+
+============================================================
+8. INVESTIGATION LIMITATIONS
+============================================================
+
+This MITRE ATT&CK mapping is based on a limited Windows
+authentication dataset used for the Splunk SOC lab.
+
+The available evidence contains authentication events but
+does not provide sufficient context to establish attacker
+intent or confirm compromise.
+
+Additional evidence that could improve a real-world
+investigation includes:
+
+- Additional authentication events over a longer period.
+- Hostname and endpoint telemetry.
+- Process creation events.
+- Network connection telemetry.
+- Account-management events.
+- Privileged-account activity.
+- Geolocation or reputation information for external IPs.
+- Endpoint detection and response telemetry.
+- Authentication source and destination details.
+- Correlation with other security alerts.
+
+
+============================================================
+9. MITRE ATT&CK MAPPING SUMMARY
+============================================================
+
+MITRE ATT&CK Enterprise Technique:
+
+T1110 — Brute Force
+
+Tactic:
+
+Credential Access
+
+Lab Evidence:
+
+3 failed authentication attempts (Event ID 4625) followed by
+1 successful authentication attempt (Event ID 4624), involving
+user John and source IP 192.168.1.75.
+
+Assessment:
+
+The observed authentication pattern is relevant to the T1110
+Brute Force technique as a detection and investigation
+scenario.
+
+The available evidence does not independently establish that
+the activity was malicious or that a brute-force attack
+occurred.
+
+
+============================================================
+10. STEP 9 COMPLETION
+============================================================
+
+STEP 9 — MITRE ATT&CK MAPPING: COMPLETED
+
+Document:
+STEP-09-MITRE-ATTACK-MAPPING.txt
+
+Primary technique:
+T1110 — Brute Force
+
+Evidence basis:
+Windows Security authentication events in Splunk Enterprise.
+
+Investigation conclusion:
+The authentication pattern is suitable for MITRE ATT&CK
+mapping and detection engineering, while maintaining the
+appropriate distinction between observed evidence and
+confirmed malicious activity.
+
+Next Project Stage:
+
+STEP 10 — SOC DASHBOARD
