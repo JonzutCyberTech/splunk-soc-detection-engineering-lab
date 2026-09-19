@@ -1,0 +1,116 @@
+Splunk SOC Detection Engineering & Threat Hunting Lab
+5-Minute Project Presentation Guide
+
+1. OPENING — 30 SECONDS
+
+“I developed a hands-on Splunk SOC Detection Engineering and Threat Hunting Lab to demonstrate practical Security Operations Center capabilities.
+
+The project uses Windows Security authentication telemetry and follows an end-to-end SOC workflow, starting from security event ingestion into Splunk, through detection engineering and incident investigation, to MITRE ATT&CK mapping and SOC dashboard development.
+
+I documented the entire project and published the artifacts on GitHub as a cybersecurity portfolio project.”
+
+2. WHAT I BUILT — 40 SECONDS
+
+“The core of the project is a controlled Windows authentication dataset containing successful and failed authentication events.
+
+I ingested this telemetry into Splunk Enterprise using the windows_security index and then developed authentication-focused detection logic using SPL.
+
+The project consists of three major detections:
+
+DET-001 detects Windows failed authentication events.
+
+DET-002 identifies multiple failed authentication attempts.
+
+DET-003 identifies a successful authentication occurring after multiple failures.
+
+These detections provide the foundation for the subsequent investigation.”
+
+3. INCIDENT INVESTIGATION — 60 SECONDS
+
+“After developing the detections, I conducted an authentication investigation involving the user account John.
+
+I used the following SPL search:
+
+index=windows_security User=John | sort 0 _time | table _time EventCode User Source_IP Action Status
+
+The investigation produced four relevant authentication events.
+
+There were three failed authentication attempts followed by one successful authentication:
+
+4625 → 4625 → 4625 → 4624
+
+All four events were associated with the John account and the source IP 192.168.1.75.
+
+The successful authentication occurred after the preceding failed attempts.
+
+However, I did not conclude that the account was compromised or that a malicious attack definitely occurred. The available laboratory telemetry was not sufficient to establish attacker intent or compromise.
+
+This demonstrates an important SOC principle: a detection identifies activity requiring investigation; it does not automatically prove malicious activity.”
+
+4. MITRE ATT&CK — 40 SECONDS
+
+“I mapped the observed authentication pattern to MITRE ATT&CK technique T1110 — Brute Force, under the Credential Access tactic.
+
+The mapping was used as an analytical context for the authentication pattern.
+
+I specifically documented that the mapping itself does not prove that a brute-force attack occurred.
+
+In a real environment, I would correlate the authentication events with additional endpoint, network, account-management and EDR telemetry before making a stronger determination.”
+
+5. SOC DASHBOARD — 40 SECONDS
+
+“I also developed a SOC Authentication Monitoring Dashboard using Splunk Dashboard Studio.
+
+The dashboard provides a centralized view of authentication activity and includes monitoring of total authentication events and failed versus successful logons.
+
+The dashboard uses the windows_security index and provides a visual layer for validating detections and supporting investigations.
+
+This demonstrates the transition from raw security telemetry and SPL queries into an operational SOC monitoring interface.”
+
+6. PROJECT LIMITATIONS — 30 SECONDS
+
+“The project uses a controlled laboratory dataset, so there are limitations.
+
+The available telemetry is not sufficient to establish attacker intent, credential theft, account compromise, or whether the source IP was attacker-controlled.
+
+In a production SOC environment, I would want additional telemetry such as endpoint detection and response data, process execution information, network telemetry, account-management events and privileged-account activity.”
+
+7. WHAT I LEARNED — 30 SECONDS
+
+“The project helped me develop practical skills in Splunk Enterprise, SPL, security event analysis, detection engineering, authentication investigation, MITRE ATT&CK mapping and SOC dashboard development.
+
+More importantly, it taught me how to move from an individual security event to a structured investigation and then document the evidence and limitations of the conclusion.”
+
+8. CLOSING — 20 SECONDS
+
+“The project is documented on GitHub as a complete SOC detection engineering and threat hunting laboratory.
+
+My objective was not simply to demonstrate that I can use Splunk, but to demonstrate that I can follow a structured security-monitoring process: collect telemetry, detect suspicious patterns, investigate the evidence, map relevant techniques, visualize the activity and document the findings.”
+
+IF ASKED: “WHAT IS THE MOST IMPORTANT THING YOU DEMONSTRATED?”
+
+“The most important thing I demonstrated is the ability to connect detection engineering with investigation. I did not stop after creating a Splunk alert. I used the detected authentication activity to investigate a timeline, examine the source IP, map the activity to MITRE ATT&CK, visualize it in a SOC dashboard, and document both the findings and the limitations of the available evidence.”
+
+PROJECT IN ONE SENTENCE
+
+“I built a Splunk-based SOC laboratory that demonstrates the complete workflow from Windows security telemetry and detection engineering through authentication investigation, MITRE ATT&CK mapping, SOC dashboard development and security documentation.”
+
+PROJECT WORKFLOW
+
+Windows Security Telemetry
+↓
+Splunk Enterprise
+↓
+Detection Engineering — DET-001 / DET-002 / DET-003
+↓
+INC-001 Investigation
+↓
+MITRE ATT&CK — T1110
+↓
+SOC Authentication Dashboard
+↓
+Documentation
+↓
+GitHub Portfolio
+↓
+PRESENTATION READY
